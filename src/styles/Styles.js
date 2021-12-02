@@ -38,5 +38,17 @@ export const Styles=StyleSheet.create({
     color:Colors.Black,
     fontSize:18,
     paddingLeft:16
- }    
+ },
+ controller: {
+   flex: 1,
+   flexDirection: 'column',
+   justifyContent: 'center',
+   alignItems: 'center',
+ },
+ container: {
+   flex: 1,
+   flexDirection: 'row',
+   margin: 6,
+   alignItems: 'center',
+ },    
 });

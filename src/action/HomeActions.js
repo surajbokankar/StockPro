@@ -15,7 +15,6 @@ const mapStateToProps = (state) => ({
       dispatch(stockLoading());
       Fetch.get(APP.BASE_URL,input)
         .then((response) => {
-          alert(JSON.stringify(response))
           const res=modifyData(response,input)
           dispatch(stockSuccess(res));
         })

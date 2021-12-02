@@ -1,21 +1,19 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
 import { Strings } from '../../constant/TextConstant';
 import {
-  StyleSheet,
-  TextInput,
   View,
   Text,
-  TouchableOpacity,
-  Dimensions,
-  BackHandler,
   ScrollView,
+  Button
 } from 'react-native';
 import { VictoryChart, VictoryLine, VictoryTheme } from 'victory-native';
 import { Styles } from '../../styles/Styles';
 import { getStocks } from '../../action/HomeActions';
 import { buildQuery, ActivityIndicatorElement } from '../../utils/Utils';
+import SearchView from '../search/SearchView';
+import { storeObject, getObject } from '../../utils/Storage';
 
 
 const HomeView = () => {
@@ -24,7 +22,17 @@ const HomeView = () => {
   const [symbol, setSymbol] = useState('')
   useEffect(() => {
     dispatch(getStocks(buildQuery('TIME_SERIES_INTRADAY', 'GOOG', '1min', 'compact')))
+    let timer = setInterval(() => {
+      const now = new Date();
+      const hour = now.getHours();
+      if (hour >= 6) {
+        clearInterval(timer)
+      }
+      dispatch(getStocks(buildQuery('TIME_SERIES_INTRADAY', 'SHOP', '1min', 'compact')))
+    }, 30000);
+    return () => clearInterval(timer)
   }, [])
+
   const home = useSelector((state) => state.HomeReducer);
   const { isStockSuccess, stocks, stockLoading } = home
   let mapData = []
@@ -51,18 +59,34 @@ const HomeView = () => {
       dispatch(getStocks(buildQuery('TIME_SERIES_INTRADAY', value.toUpperCase(), '1min', 'compact')))
     }
   }
+  const onPressAddStock = () => {
+    if (stocks) {
+      let storedStock = getObject('Stocks');
+      const json = {
+        name: stocks.name,
+        info: stocks.info,
+        open: stocks.open[0],
+        close: stocks.close[0]
+      }
+      if (storedStock.length > 0 && storedStock.hasOwnProperty('Stocks')) {
+        storedStock.data.push(json)
+        storeObject(storedStock)
+      } else {
+        storedStock = {}
+        storedStock.data = []
+        storedStock.data.push(json)
+        storeObject('Stocks', storedStock)
+      }
+      alert('Stock Added you may change it from Settings')
+    }
+  }
   return (
     <View style={Styles.mainView}>
-      <TextInput
-        autoCapitalize="characters"
-        style={{ ...Styles.input }}
-        placeholder={Strings.SEARCH_STOCK}
-        showSoftInputOnFocus={false}
-        value={symbol}
-        onChangeText={(value) => {
-          onSymboChange(value)
-        }}
+      <SearchView
+        search={(symbol) => onSymboChange(symbol)}
       />
+
+      {ActivityIndicatorElement(stockLoading)}
       <ScrollView>
         <View style={Styles.mainView}>
           <View style={Styles.mainView}>
@@ -76,10 +100,10 @@ const HomeView = () => {
 
           <View style={Styles.mainSubView}>
             <Text style={{ ...Styles.title, padding: 0 }}>
-              Open: ${open}
+              Open: {open}
             </Text>
             <Text style={{ ...Styles.subTitle, padding: 0 }}>
-              Close: ${close}
+              Close: {close}
             </Text>
           </View>
           <View style={Styles.mainSubView}>
@@ -91,9 +115,6 @@ const HomeView = () => {
             </Text>
           </View>
         </View>
-
-
-
         {
           isStockSuccess ? <View>
             <VictoryChart
@@ -109,12 +130,20 @@ const HomeView = () => {
             </VictoryChart>
           </View> : null
         }
+        <View style={{
+          justifyContent: 'flex-end', flex: 1, margin: 10, height: 42
+        }}>
+          {isStockSuccess ?
+            <Button
+              onPress={onPressAddStock}
+              title="Add Stock"
+              color="#2196F3"
+              accessibilityLabel="Learn more about this purple button"
+            /> :
+            null}
+        </View>
       </ScrollView>
-
-
-      {ActivityIndicatorElement(stockLoading)}
     </View>
   )
-
 }
 export default HomeView;

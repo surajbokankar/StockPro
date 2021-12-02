@@ -2,8 +2,9 @@ import * as React from 'react';
 import { View, Text } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import FontIcon from 'react-native-vector-icons/FontAwesome';
 
 
 
@@ -19,35 +20,38 @@ function AppNavigator() {
     <NavigationContainer>
       <Tab.Navigator
       initialRouteName="Stock"
-      screenOptions={{
-        tabBarActiveTintColor: '#e91e63',
-      }}
+      // screenOptions={{
+      //   tabBarActiveTintColor: '#e91e63',
+      // }}
+      barStyle={{ backgroundColor: '#fff' }}
+      screenOptions={({ route }) => ({
+        tabBarIcon: ({ focused, color, size }) => {
+          let iconName;
+          if (route.name === 'Stock') {
+            iconName = 'book';
+          } else if (route.name === 'Settings') {
+            iconName = focused ? 'cog' : 'cog-outline';
+          }
+          return <Icon name={iconName} size={25} color={color} />;
+        },
+        tabBarActiveTintColor: 'tomato',
+        tabBarInactiveTintColor: 'gray',
+      })}
+      tabBarOptions={{
+        activeTintColor: 'tomato',
+        inactiveTintColor: 'gray',
+        labelStyle: {
+            fontSize: 15,
+            margin: 0,
+            padding: 0,
+          }
+    }}
       >
-        <Tab.Screen name="Stock" component={Home}
-          options={{
-            tabBarLabel: 'Stock',
-            tabBarIcon: ({ color, size }) => (
-              <MaterialCommunityIcons name="home" color={color} size={size} />
-            ),
-          }} />
+        <Tab.Screen name="Stock" component={Home} />
         <Tab.Screen name="Settings" component={Setting} />
       </Tab.Navigator>
     </NavigationContainer>
 
   );
 }
-
-
-// const Stack = createNativeStackNavigator();
-
-// function AppNavigator() {
-//   return (
-//     <NavigationContainer>
-//       <Stack.Navigator>
-//         <Stack.Screen name="Home" component={Home} />
-//       </Stack.Navigator>
-//     </NavigationContainer>
-//   );
-// }
-
 export default AppNavigator;
