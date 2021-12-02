@@ -1,5 +1,5 @@
 import React from 'react';
-import {ActivityIndicator, View, Text} from 'react-native';
+import {ActivityIndicator} from 'react-native';
 import {Colors} from '../constant/ColorConstant';
 export const buildQuery = (funName,symbol,interval,output) => {
    const json={

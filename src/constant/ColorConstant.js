@@ -4,6 +4,4 @@ export const Colors = {
     White: '#FFF',
     white: '#FDFEFE',
     PrimaryColor: '#213455',
-    Skip: '#9c9c9c',
-    Done: '#44cafc',
 }

@@ -31,7 +31,7 @@ const mapStateToProps = (state) => ({
     const open=[]
     const close=[]
     const volume=[]
-    const series = Object.keys(rawSeries).reverse().forEach(timestamp => {      
+    Object.keys(rawSeries).reverse().forEach(timestamp => {      
       open.push(rawSeries[timestamp]['1. open'])
       high.push(rawSeries[timestamp]['2. high'])
       low.push(rawSeries[timestamp]['3. low'])

@@ -1,7 +1,5 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigation } from '@react-navigation/native';
-import { Strings } from '../../constant/TextConstant';
 import {
   View,
   Text,
@@ -17,7 +15,6 @@ import { storeObject, getObject } from '../../utils/Storage';
 
 
 const HomeView = () => {
-  const navigation = useNavigation();
   const dispatch = useDispatch();
   const [symbol, setSymbol] = useState('')
   useEffect(() => {
@@ -85,7 +82,6 @@ const HomeView = () => {
       <SearchView
         search={(symbol) => onSymboChange(symbol)}
       />
-
       {ActivityIndicatorElement(stockLoading)}
       <ScrollView>
         <View style={Styles.mainView}>
@@ -131,7 +127,7 @@ const HomeView = () => {
           </View> : null
         }
         <View style={{
-          justifyContent: 'flex-end', flex: 1, margin: 10, height: 42
+          justifyContent: 'flex-end', flex: 1, margin: 4, height: 42
         }}>
           {isStockSuccess ?
             <Button

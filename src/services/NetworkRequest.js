@@ -4,9 +4,7 @@ import {APP} from './Config';
 /**
  * Request Wrapper with default success/error actions
  */
-export const request = async function (options, isHeader) {
-  console.log('REQUETS URL',APP.BASE_URL)
-  
+export const request = async function (options, isHeader) {  
   const client = axios.create({
     baseURL: APP.BASE_URL,
     timeout: 5000,
